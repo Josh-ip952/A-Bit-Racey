@@ -34,7 +34,8 @@ def things_dodged(count):
     font = pygame.font.SysFont(None, 25)
     text = font.render("Dodged: "+str(count), True, black)
     gameDisplay.blit(text,(0,0))
- 
+
+# Draw the obstacles (rectangles) based on random generations input into this function
 def things(thingx, thingy, thingw, thingh, color):
     pygame.draw.rect(gameDisplay, color, [thingx, thingy, thingw, thingh])
  
@@ -46,7 +47,7 @@ def text_objects(text, font):
     return textSurface, textSurface.get_rect()
  
 def message_display(text):
-    largeText = pygame.font.Font('freesansbold.ttf',115)
+    largeText = pygame.font.Font('freesansbold.ttf',100)
     TextSurf, TextRect = text_objects(text, largeText)
     TextRect.center = ((display_width/2),(display_height/2))
     gameDisplay.blit(TextSurf, TextRect)
@@ -58,7 +59,7 @@ def message_display(text):
     game_loop()
     
     
- 
+# Display message when car crashes 
 def crash():
     message_display('You Crashed')
 
@@ -78,7 +79,7 @@ def game_intro():
                     intro = False
                 
         gameDisplay.fill(white)
-        largeText = pygame.font.Font('freesansbold.ttf',115)
+        largeText = pygame.font.Font('freesansbold.ttf',100)
         TextSurf, TextRect = text_objects("A bit Racey", largeText)
         TextRect.center = ((display_width/2),(display_height/2))
         gameDisplay.blit(TextSurf, TextRect)
