@@ -5,7 +5,7 @@ import random
 #######################################################################################
 ## Following code from https://pythonprogramming.net/pygame-start-menu-tutorial/
 ## Some parts are refactored
-## Comments are added, there are no comments in the original code
+## Comments are added, there were no comments in the original code
 #######################################################################################
 
 
@@ -20,13 +20,14 @@ red = (255,0,0)
  
 block_color = (53,115,255)
  
+# Car width is dependent on the image input
 car_width = 73
  
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('A bit Racey')
 clock = pygame.time.Clock()
  
-carImg = pygame.image.load('racecar.png')
+carImg = pygame.image.load('./racecar.png')
  
 
 # Count how many objects are dodged 
@@ -38,14 +39,16 @@ def things_dodged(count):
 # Draw the obstacles (rectangles) based on random generations input into this function
 def things(thingx, thingy, thingw, thingh, color):
     pygame.draw.rect(gameDisplay, color, [thingx, thingy, thingw, thingh])
- 
+
+# Car is on the coordinates (x,y), which changes whenever user moves the car 
 def car(x,y):
     gameDisplay.blit(carImg,(x,y))
  
 def text_objects(text, font):
     textSurface = font.render(text, True, black)
     return textSurface, textSurface.get_rect()
- 
+
+# Display a large text
 def message_display(text):
     largeText = pygame.font.Font('freesansbold.ttf',100)
     TextSurf, TextRect = text_objects(text, largeText)
@@ -63,6 +66,9 @@ def message_display(text):
 def crash():
     message_display('You Crashed')
 
+
+# The game_intro function is refactored
+# Starting menu is edited
 def game_intro():
 
     intro = True
@@ -74,15 +80,27 @@ def game_intro():
                 pygame.quit()
                 quit()
 
+            # Add function: game starts when player presses space bar
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_s:
+                if event.key == pygame.K_SPACE:
                     intro = False
                 
         gameDisplay.fill(white)
+
+        # Assign font
         largeText = pygame.font.Font('freesansbold.ttf',100)
-        TextSurf, TextRect = text_objects("A bit Racey", largeText)
-        TextRect.center = ((display_width/2),(display_height/2))
+        normalText = pygame.font.Font('freesansbold.ttf', 48)
+
+        # Create Title
+        TitleSurf, TitleRect = text_objects("A Bit Racey", largeText)
+        TitleRect.center = ((display_width/2),(display_height/2) - 50)
+        gameDisplay.blit(TitleSurf, TitleRect)
+
+        # Create instructions to start the game
+        TextSurf, TextRect = text_objects("Press Space Bar To Play!", normalText)
+        TextRect.center = ((display_width/2),(display_height/2)  + 100)
         gameDisplay.blit(TextSurf, TextRect)
+
         pygame.display.update()
         clock.tick(15)
         
