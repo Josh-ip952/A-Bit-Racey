@@ -17,7 +17,7 @@ display_height = 600
 black = (0,0,0)
 white = (255,255,255)
 red = (255,0,0)
- 
+green = (0, 255, 0)
 block_color = (53,115,255)
  
 # Car width is dependent on the image input
@@ -48,7 +48,7 @@ def text_objects(text, font):
     textSurface = font.render(text, True, black)
     return textSurface, textSurface.get_rect()
 
-# Display a large text
+# Display a large text that appears for a certain time period
 def message_display(text):
     largeText = pygame.font.Font('freesansbold.ttf',100)
     TextSurf, TextRect = text_objects(text, largeText)
@@ -57,18 +57,59 @@ def message_display(text):
  
     pygame.display.update()
  
-    time.sleep(2)
- 
-    game_loop()
+
+
+# Button function below is from
+# https://github.com/detnsw-sydtech/depth-first-search-algorithm-tutorial
+# Author: Asati, C
+
+def button(msg,x,y,w,h,ic,ac,action=None):
+    mouse = pygame.mouse.get_pos()
+    #print(mouse)
+    click = pygame.mouse.get_pressed()
+    #print(click)
+    if x+w > mouse[0] > x and y+h > mouse[1] > y:
+        pygame.draw.rect(gameDisplay, ac,(x,y,w,h))
+        if click[0]==1 and action !=None:
+            action()
+    else:
+        pygame.draw.rect(gameDisplay, ic,(x,y,w,h))
+    smallText = pygame.font.Font("freesansbold.ttf",20)
+    textSurf, textRect = text_objects(msg, smallText)
+    textRect.center = ( (x+(w/2)), (y+(h/2)) )
+    gameDisplay.blit(textSurf, textRect)
     
+
     
-# Display message when car crashes 
+# Crash function below is from
+# https://github.com/detnsw-sydtech/depth-first-search-algorithm-tutorial
+# Author: Asati, C 
+
 def crash():
-    message_display('You Crashed')
+#    pygame.mixer.Sound.play(crash_sound)
+#    pygame.mixer.music.stop()
+#    message_display('You Crashed')
+    while True:
+
+        for event in pygame.event.get():
+            #print(event)
+            if event.type == pygame.QUIT:
+                endgame()
+                
+        gameDisplay.fill(white)
+
+
+        button("Play Again",150,450,100,50,green,green,game_loop)
+        button("Quit",550,450,100,50,red,red,endgame)
+
+        pygame.display.update()
+        clock.tick(15)
+
 
 
 # The game_intro function is refactored
 # Starting menu is edited
+
 def game_intro():
 
     intro = True
@@ -77,8 +118,7 @@ def game_intro():
         for event in pygame.event.get():
             print(event)
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+                endgame()
 
             # Add function: game starts when player presses space bar
             if event.type == pygame.KEYDOWN:
@@ -104,7 +144,9 @@ def game_intro():
         pygame.display.update()
         clock.tick(15)
         
-        
+def endgame():
+    pygame.quit()
+    quit()
     
 def game_loop():
     x = (display_width * 0.45)
@@ -128,8 +170,7 @@ def game_loop():
  
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+                endgame()
  
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
@@ -174,5 +215,4 @@ def game_loop():
 
 game_intro()
 game_loop()
-pygame.quit()
-quit()
+endgame()
