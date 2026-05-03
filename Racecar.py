@@ -10,6 +10,7 @@ import random
 
 
 pygame.init()
+pygame.mixer.init()
 
 display_width = 800
 display_height = 600
@@ -28,6 +29,11 @@ pygame.display.set_caption('A bit Racey')
 clock = pygame.time.Clock()
 
 carImg = pygame.image.load('./racecar.png')
+
+# Add sound effects
+music = pygame.mixer.music.load('Tobu - Candyland.mp3')
+crash_sound = pygame.mixer.Sound(
+    'dragon-studio-car-crash-sound-effect-376874.mp3')
 
 
 # Count how many objects are dodged
@@ -91,8 +97,10 @@ def button(msg, x, y, w, h, ic, ac, action=None):
 # Author: Asati, C
 
 def crash():
-    # pygame.mixer.Sound.play(crash_sound)
-    # pygame.mixer.music.stop()
+    pygame.mixer.Sound.play(crash_sound)
+    crash_sound.set_volume(0.25)
+
+    pygame.mixer.music.stop()  # Stop background music
     message_display('You Crashed')
     while True:
 
@@ -173,6 +181,9 @@ def game_loop():
     dodged = 0
 
     gameExit = False
+
+    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(0.5)
 
     while not gameExit:
 
