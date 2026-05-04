@@ -21,8 +21,9 @@ red = (255, 0, 0)
 green = (0, 255, 0)
 block_color = (53, 115, 255)
 
-# Car width is dependent on the image input
+# Car size is dependent on the image input
 car_width = 73
+car_height = 82
 
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('A bit Racey')
@@ -83,7 +84,6 @@ def button(msg, x, y, w, h, ic, ac, action=None):
     if x+w > mouse[0] > x and y+h > mouse[1] > y:
         pygame.draw.rect(gameDisplay, ac, (x, y, w, h))
         if click[0] == 1 and action != None:
-            pygame.time.delay(200)
             action()
     else:
         pygame.draw.rect(gameDisplay, ic, (x, y, w, h))
@@ -99,16 +99,17 @@ def button(msg, x, y, w, h, ic, ac, action=None):
 
 def crash():
     pygame.mixer.Sound.play(crash_sound)
-    crash_sound.set_volume(0.35)
+    crash_sound.set_volume(0.25)
+
     pygame.mixer.music.stop()  # Stop background music
-    
+    message_display('You Crashed')
     while True:
 
         for event in pygame.event.get():
             # print(event)
             if event.type == pygame.QUIT:
                 endgame()
- 
+
         gameDisplay.fill(white)
 
         message_display('You Crashed')
@@ -117,8 +118,7 @@ def crash():
         button("Quit", 550, 450, 100, 50, red, red, endgame)
 
         pygame.display.update()
-        clock.tick(60)
-        
+        clock.tick(15)
 
 
 # The game_intro function is refactored
@@ -213,19 +213,29 @@ def game_loop():
         things_dodged(dodged)
 
         if x > display_width - car_width or x < 0:
-            crash()
+            crash()  # Crash if car hits the margin
 
         if thing_starty > display_height:
+            # If the obstacle moves below the screen (dodged):
+
             thing_starty = 0 - thing_height
             thing_startx = random.randrange(0, display_width)
             dodged += 1
             thing_speed += 1
             thing_width += (dodged * 1.2)
 
-        if y < thing_starty+thing_height:
+#############################################################################
+# IMPORTANT
+# The original code has a major issue
+# It thinks it crashes because it is a y crossover
+# "y crossover" is considered if the top of the car
+# is above the bottom of obstacles
+# But this still holds true if the obstacle is completely under the car
+
+        if y < thing_starty + thing_height and y + car_height > thing_starty:
             print('y crossover')
 
-            if x > thing_startx and x < thing_startx + thing_width or x+car_width > thing_startx and x + car_width < thing_startx+thing_width:
+            if x < thing_startx + thing_width and x + car_width > thing_startx:
                 print('x crossover')
                 crash()
 
