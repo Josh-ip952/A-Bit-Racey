@@ -83,6 +83,7 @@ def button(msg, x, y, w, h, ic, ac, action=None):
     if x+w > mouse[0] > x and y+h > mouse[1] > y:
         pygame.draw.rect(gameDisplay, ac, (x, y, w, h))
         if click[0] == 1 and action != None:
+            pygame.time.delay(200)
             action()
     else:
         pygame.draw.rect(gameDisplay, ic, (x, y, w, h))
@@ -98,17 +99,16 @@ def button(msg, x, y, w, h, ic, ac, action=None):
 
 def crash():
     pygame.mixer.Sound.play(crash_sound)
-    crash_sound.set_volume(0.25)
-
+    crash_sound.set_volume(0.35)
     pygame.mixer.music.stop()  # Stop background music
-    message_display('You Crashed')
+    
     while True:
 
         for event in pygame.event.get():
             # print(event)
             if event.type == pygame.QUIT:
                 endgame()
-
+ 
         gameDisplay.fill(white)
 
         message_display('You Crashed')
@@ -117,7 +117,8 @@ def crash():
         button("Quit", 550, 450, 100, 50, red, red, endgame)
 
         pygame.display.update()
-        clock.tick(15)
+        clock.tick(60)
+        
 
 
 # The game_intro function is refactored
